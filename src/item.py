@@ -1,3 +1,7 @@
+import csv, os
+
+
+
 class Item:
     """
     Класс для представления товара в магазине.
@@ -13,7 +17,7 @@ class Item:
         :param price: Цена за единицу товара.
         :param quantity: Количество товара в магазине.
         """
-        self.name = name
+        self.__name = name
         self.price = price
         self.quantity = quantity
         self.all.append(self)
@@ -32,3 +36,66 @@ class Item:
         Применяет установленную скидку для конкретного товара.
         """
         self.price *= self.pay_rate
+
+    @property
+    def name(self) -> str:
+        """
+        Создает свойство name класса Item
+        :return: Свойство name класса Item
+        """
+        return self.__name
+
+    @name.setter
+    def name(self, name) -> None:
+        """
+        Сеттер для private атрибута name
+        :param name: Private атрибут name
+        :return: None
+        """
+        if len(name) > 10:
+            raise Exception(f"Длина наименования товара превышает 10 символов")
+        else:
+            self.__name: str = name
+
+    @staticmethod
+    def load_file(filename) -> list:
+        """
+        Получает данные из csv-файла
+        :return: Список словарей из строк csv-файла
+        """
+        data = []
+
+        filedir = os.path.dirname(os.path.abspath(__file__))
+        with open(os.path.join(f'{filedir}', filename), 'r+', encoding='windows-1251') as csv_file:
+            csv_reader = csv.DictReader(csv_file)
+
+            for item in csv_reader:
+                data.append(item)
+            return data
+
+    @classmethod
+    def instantiate_from_csv(cls) -> None:
+        """
+        Инициализирует экземпляры класса Item данными из файла src/items.csv
+        """
+        cls.all = []
+        data = cls.load_file('items.csv')
+        for line in data:
+            cls(line['name'],
+                cls.string_to_number(line['price']),
+                cls.string_to_number(line['quantity']))
+
+    @staticmethod
+    def string_to_number(num_str):
+        """
+        Статический метод, возвращающий число из числа-строки.
+
+        :param num_str: Число-строка.
+        :return: Число.
+        """
+        if "." in num_str:
+            str_to_float: float = float(num_str)
+            str_to_int: int = int(str_to_float)
+        else:
+            str_to_int: int = int(num_str)
+        return str_to_int
