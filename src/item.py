@@ -111,3 +111,12 @@ class Item:
         else:
             str_to_int: int = int(num_str)
         return str_to_int
+
+    def __add__(self, other) -> int:
+        """
+        Метод для сложения количества товара в магазине для класса Item
+        """
+        if issubclass(other.__class__, self.__class__):
+            return self.quantity + other.quantity
+        else:
+            raise Exception
