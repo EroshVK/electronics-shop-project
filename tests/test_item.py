@@ -1,10 +1,16 @@
 import pytest
 from src.item import Item
+from src.phone import Phone
 
 
 @pytest.fixture
 def item():
     return Item("Смартфон", 10000, 20)
+
+
+@pytest.fixture
+def phone():
+    return Phone("iPhone 14", 120_000, 5, 2)
 
 
 def test_repr(item):
@@ -51,3 +57,7 @@ def test_instantiate_from_csv():
 @pytest.mark.parametrize("string, expected", [("5", 5), ("5.0", 5), ("5.5", 5)])
 def test_string_to_number(string, expected):
     assert Item.string_to_number(string) == expected
+
+
+def test_add(item, phone):
+    assert item + phone == 25
