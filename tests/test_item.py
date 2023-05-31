@@ -61,3 +61,10 @@ def test_string_to_number(string, expected):
 
 def test_add(item, phone):
     assert item + phone == 25
+
+
+def test_file_not_found_exception(item):
+    filename = "no_file.txt"
+    with pytest.raises(FileNotFoundError) as exception:
+        item.load_file(filename)
+        assert f"Отсутствует файл {filename}" == exception.value.args[0]
